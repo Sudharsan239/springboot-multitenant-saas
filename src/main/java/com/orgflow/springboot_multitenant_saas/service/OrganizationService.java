@@ -21,11 +21,13 @@ public class OrganizationService
 		this.organizationRepository = organizationRepository;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Organization> getAllOrganizations()
 	{
 		return organizationRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Organization getOrganizationById(Long id)
 	{
 		return organizationRepository.findById(id)

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class CreateOrUpdateOrganizationRequest
 {
 	@NotBlank(message = "Organization name must not be blank")
-	@Size(min = 3, message = "Organization name must be at least 3 characters long")
+	@Size(min = 3, max = 100, message = "Organization name must be between 3 and 100 characters long")
 	private String name;
 
 	public String getName()

@@ -1,20 +1,28 @@
 package com.orgflow.springboot_multitenant_saas.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 import java.time.Instant;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class User
 {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String username;
@@ -29,8 +37,11 @@ public class User
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Organization organization;
 
+	@CreatedDate
+	@Column(updatable = false)
 	private Instant createdAt;
 
+	@LastModifiedDate
 	private Instant modifiedAt;
 
 	public User()
