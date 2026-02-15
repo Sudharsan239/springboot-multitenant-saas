@@ -1,7 +1,7 @@
 package com.orgflow.springboot_multitenant_saas.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,9 @@ public class ProjectService
 	}
 
 	@Transactional(readOnly = true)
-	public List<Project> getProjectsByOrganization(Long organizationId)
+	public Page<Project> getProjectsByOrganization(Long organizationId, String name, Pageable pageable)
 	{
-		return projectRepository.findByOrganizationId(organizationId);
+		return projectRepository.findByOrganizationIdWithFilters(organizationId, name, pageable);
 	}
 
 	@Transactional(readOnly = true)

@@ -1,8 +1,8 @@
 package com.orgflow.springboot_multitenant_saas.controller;
 
 import java.net.URI;
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.orgflow.springboot_multitenant_saas.dto.requestdto.CreateOrUpdateUserRequest;
 import com.orgflow.springboot_multitenant_saas.dto.responsedto.UserResponse;
+import com.orgflow.springboot_multitenant_saas.model.Role;
 import com.orgflow.springboot_multitenant_saas.model.User;
 import com.orgflow.springboot_multitenant_saas.service.UserService;
 
@@ -31,12 +33,12 @@ public class UserController
 	}
 
 	@GetMapping("/organizations/{organizationId}/users")
-	public List<UserResponse> getUsers(@PathVariable Long organizationId)
+	public Page<UserResponse> getUsers(@PathVariable Long organizationId, @RequestParam(required = false) String username,
+		@RequestParam(required = false) String email, @RequestParam(required = false) Role role, Pageable pageable)
 	{
-		return userService.getUsersByOrganization(organizationId).stream()
+		return userService.getUsersByOrganization(organizationId, username, email, role, pageable)
 			.map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole(),
-				user.getOrganization().getId(), user.getCreatedAt(), user.getModifiedAt()))
-			.toList();
+				user.getOrganization().getId(), user.getCreatedAt(), user.getModifiedAt()));
 	}
 
 	@GetMapping("/organizations/{organizationId}/users/{userId}")
