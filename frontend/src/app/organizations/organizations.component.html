@@ -1,0 +1,80 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Organizations</h1>
+    <p>OrgFlow multi-tenant API</p>
+  </header>
+
+  @if (successMessage) {
+    <p class="success" role="status">{{ successMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error" role="alert">{{ errorMessage }}</p>
+  }
+
+  <section class="card">
+    <h2>Create organization</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="e.g. Acme Corp"
+        autocomplete="off"
+      />
+
+      @if (form.controls.name.touched && form.controls.name.errors?.['required']) {
+        <p class="field-error">Name is required.</p>
+      }
+      @if (form.controls.name.touched && form.controls.name.errors?.['minlength']) {
+        <p class="field-error">Name must be at least 3 characters.</p>
+      }
+      @if (form.controls.name.touched && form.controls.name.errors?.['maxlength']) {
+        <p class="field-error">Name must be at most 100 characters.</p>
+      }
+
+      <button type="submit" [disabled]="submitting">
+        {{ submitting ? 'Creating…' : 'Create' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="list-header">
+      <h2>All organizations</h2>
+      <button type="button" class="secondary" (click)="loadOrganizations()" [disabled]="loading">
+        Refresh
+      </button>
+    </div>
+
+    @if (loading) {
+      <p class="muted">Loading…</p>
+    } @else if (organizations.length === 0) {
+      <p class="muted">No organizations yet. Create one above.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (org of organizations; track org.id) {
+            <tr>
+              <td>{{ org.id }}</td>
+              <td>{{ org.name }}</td>
+              <td>{{ org.createdAt | date: 'medium' }}</td>
+              <td>
+                <button type="button" class="danger" (click)="onDelete(org.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</section>

@@ -3,6 +3,8 @@ package com.orgflow.springboot_multitenant_saas.controller;
 import jakarta.validation.Valid;
 
 import java.net.URI;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -65,9 +67,9 @@ public class OrganizationController
 	}
 
 	@DeleteMapping("/organizations/{id}")
-	public ResponseEntity<Void> deleteOrganization(@PathVariable Long id)
+	public ResponseEntity<Map> deleteOrganization(@PathVariable Long id)
 	{
 		organizationService.deleteOrganization(id);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(Map.of("message", "Organization and all related data deleted successfully"));
 	}
 }
